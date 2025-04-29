@@ -18,6 +18,11 @@ public class AggregatorApiController : ControllerBase
         _boredApiService = boredApiService;
     }
 
+    /// <summary>
+    /// The endpoint to get all aggregated data from all APIs. 
+    /// Now is only calling the 1 API
+    /// </summary>
+    /// <returns> An asynchronous IActionResult using the Ok or StatusCode</returns>
     [HttpGet("externaldata")]
     public async Task<IActionResult> GetExternalData()
     {
