@@ -1,0 +1,12 @@
+# Personal keys
+ApiKeys.txt
+
+# Build results
+bin/
+obj/
+
+# Logs
+*.log
+
+# Others
+*.cache
