@@ -6,26 +6,25 @@ using System.Text.Json;
 
 namespace AggregatorAPI.Services;
 
-
-public interface IBoredApiService : IExternalApiService<string> {
+public interface IPokemonApiService : IExternalApiService<string>{
 
 }
 
 /// <summary>
 /// This is the first External Api(Pokemon Api) that is called as a service
 /// </summary>
-public class BoredApiService : IBoredApiService{
+public class PokemonApiService : IPokemonApiService {
     readonly HttpClient _httpClient;
-    readonly ILogger<BoredApiService> _logger;
+    readonly ILogger<PokemonApiService> _logger;
     readonly  ExternalApiConfig _apiConfig;
     readonly int MaxRetryAttempts = 3;
     readonly int DelayBetweenRetriesMilliseconds = 300;
 
-    readonly string _endpoint  = "random";
-    public BoredApiService(HttpClient httpClient, ILogger<BoredApiService> logger, IOptions<ExternalApiSettings> options, string endpoint = "random"){
+    readonly string _endpoint  = "pokemon/ditto";
+    public PokemonApiService(HttpClient httpClient, ILogger<PokemonApiService> logger, IOptions<ExternalApiSettings> options, string endpoint = "pokemon/ditto"){
         _httpClient = httpClient;
         _logger     = logger;
-        _apiConfig  = options.Value.BoredApi;
+        _apiConfig  = options.Value.PokemonApi;
         _endpoint   = endpoint;
     }
 
@@ -44,15 +43,16 @@ public class BoredApiService : IBoredApiService{
                 attempt++;
 
                 _logger.LogInformation("Attempt {Attempt} to call External API at {Url}", attempt, _apiConfig.BaseUrl);
-                
+
+                //var response = await _httpClient.GetAsync("endpoint");
                 var response = await _httpClient.GetAsync(_endpoint);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    
-                    var boredResp = JsonSerializer.Deserialize<Bored>(content);
-                    return Result<string>.Success(JsonSerializer.Serialize(boredResp));
+                    //return Result<string>.Success(content);
+                    var pokemonResp = JsonSerializer.Deserialize<Pokemon>(content);
+                    return Result<string>.Success(JsonSerializer.Serialize(pokemonResp));
                 }
                 else
                 {

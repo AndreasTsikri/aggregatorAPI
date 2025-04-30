@@ -1,6 +1,6 @@
-using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 
+namespace AggregatorAPI.Models;
 public class Pokemon{
 
     [JsonPropertyName("name")]

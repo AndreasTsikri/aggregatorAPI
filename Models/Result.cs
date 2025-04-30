@@ -1,5 +1,11 @@
 
 namespace AggregatorAPI.Models;
+
+/// <summary>
+/// An object that is returned from each api call.
+/// Most of time is used with string type and the serialized response
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class Result<T>{
 
     public bool IsSuccess{get; set;}
