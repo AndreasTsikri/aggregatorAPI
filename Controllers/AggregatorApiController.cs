@@ -25,7 +25,7 @@ public class AggregatorApiController : ControllerBase
 
     /// <summary>
     /// The endpoint to get all aggregated data from all APIs. 
-    /// Now is only calling the 1 API
+    /// Now is only calling 2 APIs : pokemon API & Bored Api. Thes api do not want a Api key to work
     /// </summary>
     /// <returns> An asynchronous IActionResult using the Ok or StatusCode</returns>
     [HttpGet("externaldata")]
@@ -48,9 +48,9 @@ public class AggregatorApiController : ControllerBase
     public async Task<IActionResult> GetDataTwoApis()
     {
         string getResponse(Result<string>? r){
-            if (r == null )
-                return null;
-            return r.IsSuccess ? r?.Data ?? "No data" : r?.ErrorMessage ?? "No error";
+            if (r == null)
+                return  "";
+            return r.IsSuccess ? r?.Data ?? "No data" : r?.ErrorMessage ?? "No error message";
         }
 
         var api1 = _boredApiService.GetDataAsync();
