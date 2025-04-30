@@ -16,4 +16,5 @@ public class Result<T>{
     public static Result<T> Success(T data) => new Result<T>{IsSuccess = true, StatusCode = 200, Data = data};
     public static Result<T> Failure(string err, int status = 500) => new Result<T>{IsSuccess = false, StatusCode = status, ErrorMessage = err,};
 
+    
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using AggregatorAPI.Services.Interfaces;
 using AggregatorAPI.Services;
 using AggregatorAPI.Models;
+using System.Text.Json;
 
 namespace AggregatorAPI.Controllers;
 
@@ -46,22 +47,38 @@ public class AggregatorApiController : ControllerBase
     [HttpGet("externaldatatwo")]
     public async Task<IActionResult> GetDataTwoApis()
     {
+        string getResponse(Result<string>? r){
+            if (r == null )
+                return null;
+            return r.IsSuccess ? r?.Data ?? "No data" : r?.ErrorMessage ?? "No error";
+        }
+
         var api1 = _boredApiService.GetDataAsync();
         var api2 = _pokemonApiService.GetDataAsync();
 
-        await Task.WhenAll(api1,api2);
+        await Task.WhenAll(api1, api2);
 
         Result<string> r1 = await api1;
         Result<string> r2 = await api2;
 
         if (!r1.IsSuccess)
         {
-             _logger.LogWarning("First api error to client: {ErrorMessage}", r1.ErrorMessage);
+             _logger.LogWarning("First api error to client: {ErrorMessage}", r1.ErrorMessage);             
         }
         if (!r2.IsSuccess)
         {
              _logger.LogWarning("Second api error to client: {ErrorMessage}", r2.ErrorMessage);
-        }        
-        return Ok(r1.Data + "\n" + r2.Data);
+        }       
+        
+        var t = new Aggr<AggregateResult>(
+            new AggregateResult{
+                ApiUrl = "test - bored",
+                Result = getResponse(r1)
+            },
+            new AggregateResult{
+                ApiUrl = "test - pokemon",
+                Result = getResponse(r2)
+            });
+        return Ok(JsonSerializer.Serialize(t));
     }
 }
