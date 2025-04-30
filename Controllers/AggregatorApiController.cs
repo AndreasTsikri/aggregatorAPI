@@ -71,15 +71,15 @@ public class AggregatorApiController : ControllerBase
              _logger.LogWarning("Second api error to client: {ErrorMessage}", r2.ErrorMessage);
         }       
         
-        var t = new Aggr<AggregateResult>(
-            new AggregateResult{
-                ApiUrl = "test - bored",
-                Result = getResponse(r1)
-            },
-            new AggregateResult{
-                ApiUrl = "test - pokemon",
-                Result = getResponse(r2)
-            });
-        return Ok(JsonSerializer.Serialize(t));
+        // var t = new Aggr<AggregateResult>(
+        //     new AggregateResult{
+        //         ApiUrl = "test - bored",
+        //         Result = getResponse(r1)
+        //     },
+        //     new AggregateResult{
+        //         ApiUrl = "test - pokemon",
+        //         Result = getResponse(r2)
+        //     });
+        return Ok(getResponse(r1) + "," + getResponse(r2));
     }
 }
