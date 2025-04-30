@@ -14,7 +14,7 @@ public class AggregatorApiController : ControllerBase
     private readonly ILogger<AggregatorApiController> _logger;
     private readonly IExternalApiService<string> _boredApiService;
     private readonly IExternalApiService<string> _pokemonApiService;
-
+    
     public AggregatorApiController(ILogger<AggregatorApiController> logger, IBoredApiService boredApiService, IPokemonApiService pokemonApiService)
     {
         _logger            = logger;
@@ -25,7 +25,8 @@ public class AggregatorApiController : ControllerBase
 
     /// <summary>
     /// The endpoint to get all aggregated data from all APIs. 
-    /// Now is only calling 2 APIs : pokemon API & Bored Api. Thes api do not want a Api key to work
+    /// Now is only calling 2 APIs : pokemon API and Bored Api. 
+    /// These APIs do not need a Api keys to work
     /// </summary>
     /// <returns> An asynchronous IActionResult using the Ok or StatusCode</returns>
     [HttpGet("externaldata")]
