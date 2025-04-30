@@ -12,11 +12,11 @@
 In order to run the project :
 1) Clone the repo locally
 2) Open appsettings.json and replace all "apiKeys" with your api keys for each external Api
-3) build project with `dotnet build`
-4) run the project with `dotnet run` or `dotnet watch` to open swagger or by click start debugging in VS code IDE
+3) Build project with `dotnet build`
+4) Run the project with `dotnet run` or `dotnet watch` to open swagger or by click start debugging in VS code IDE
 
 # return values
-The api call returns N json objects seperated by comma, where N is the number of API calls. If the reposnse failed the object contains the message error . Currently the n = 2 for 2 API calls
+The api call returns N json objects seperated by comma, where N is the number of API calls. If the response failed the object contains the message error . Currently the n = 2 for 2 API calls
 
 Example Response:
 
