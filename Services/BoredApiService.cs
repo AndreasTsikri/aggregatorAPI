@@ -2,13 +2,14 @@ using AggregatorAPI.Models;
 using AggregatorAPI.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using AggregatorAPI.Settings;
+using System.Text.Json;
 
 namespace AggregatorAPI.Services;
 
 /// <summary>
 /// This is the first External Api(Pokemon Api) that is called as a service
 /// </summary>
-public class BoredApiService : IExternalApiService<string>{
+public class BoredApiService : IExternalApiService<string> {
     readonly HttpClient _httpClient;
     readonly ILogger<BoredApiService> _logger;
     readonly  ExternalApiConfig _apiConfig;
@@ -43,7 +44,9 @@ public class BoredApiService : IExternalApiService<string>{
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return Result<string>.Success(content);
+                    //return Result<string>.Success(content);
+                    var pokemonResp = JsonSerializer.Deserialize<Pokemon>(content);
+                    return Result<string>.Success(JsonSerializer.Serialize(pokemonResp));
                 }
                 else
                 {
