@@ -26,13 +26,8 @@ public class AggregatorApiController : ControllerBase
     }
 
 
-    /// <summary>
-    /// The endpoint to get all aggregated data from all APIs. 
-    /// Now is only calling 2 APIs : pokemon API and Bored Api. 
-    /// These APIs do not need a Api keys to work
-    /// </summary>
-    /// <returns> An asynchronous IActionResult using the Ok or StatusCode</returns>
-    [HttpGet("externaldata")]
+    
+    [HttpGet("getBoredApiData")]
     public async Task<IActionResult> GetExternalData()
     {
         var result = await _boredApiService.GetDataAsync();
@@ -48,7 +43,13 @@ public class AggregatorApiController : ControllerBase
         }
     }
 
-    [HttpGet("externaldatatwo")]
+    /// <summary>
+    /// The endpoint to get all aggregated data from all APIs. 
+    /// Now is calling 3 APIs : pokemon API ,Bored Api and News Api. 
+    /// Only news Api needs an API key to be called
+    /// </summary>
+    /// <returns> An asynchronous IActionResult using the Ok or StatusCode</returns>
+    [HttpGet("externaldatathree")]
     public async Task<IActionResult> GetAggregatedData([FromQuery][Required] string q, [FromQuery] string? sortBy)//public async Task<IActionResult> GetDataTwoApis()
     {
         string getResponse(Result<string>? r){
