@@ -7,8 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<ExternalApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
-builder.Services.AddHttpClient<IBoredApiService, BoredApiService>();
+builder.Services.AddHttpClient<IBoredApiService  , BoredApiService>();
 builder.Services.AddHttpClient<IPokemonApiService, PokemonApiService>();
+builder.Services.AddHttpClient<INewsApiService   , NewsApiService>();
 
 builder.Services.AddControllers();
 
