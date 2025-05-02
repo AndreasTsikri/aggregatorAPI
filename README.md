@@ -31,7 +31,7 @@ Example Response with 2 APIs (Bored and Pokemon Api):
 
 Example Response with 3 APIs (Bored, Pokemon and News Api):
 
-{"activity":"Improve your touch typing","type":"busywork","participants":1},{"name":"ditto","height":3,"weight":40,"location_area_encounters":"https://pokeapi.co/api/v2/pokemon/132/encounters"},{"status":"ok","totalResults":175200,"articles":[{"source":{"id":null,"name":"Gizmodo.com"},"author":"Matt Novak","title":"Trump Plans Private Dinner for Largest Buyers of $TRUMP Crypto","content":"President Donald Trump launched his own cryptocurrency just before taking office in January in one of the most blatantly unethical financial schemes from any U.S. president of the modern era. And whi\u2026 [\u002B5004 chars]"}}]
+{"activity":"Improve your touch typing","type":"busywork","participants":1}, {"name":"ditto","height":3,"weight":40,"location_area_encounters":"https://pokeapi.co/api/v2/pokemon/132/encounters"}, {"status":"ok","totalResults":175200,"articles":[{"source":{"id":null,"name":"Gizmodo.com"},"author":"Matt Novak","title":"Trump Plans Private Dinner for Largest Buyers of $TRUMP Crypto","content":"President Donald Trump launched his own cryptocurrency just before taking office in January in one of the most blatantly unethical financial schemes from any U.S. president of the modern era. And whi\u2026 [\u002B5004 chars]"}}]
 
 Example error response :
-{"activity":"Buy a new house decoration","type":"recreational","participants":1},{"name":"ditto","height":3,"weight":40,"location_area_encounters":"https://pokeapi.co/api/v2/pokemon/132/encounters"},Client Error: BadRequest
+{"activity":"Buy a new house decoration","type":"recreational","participants":1}, {"name":"ditto","height":3,"weight":40,"location_area_encounters":"https://pokeapi.co/api/v2/pokemon/132/encounters"}, Client Error: BadRequest

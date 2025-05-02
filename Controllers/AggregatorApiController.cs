@@ -90,6 +90,6 @@ public class AggregatorApiController : ControllerBase
         //         ApiUrl = "test - pokemon",
         //         Result = getResponse(r2)
         //     });
-        return Ok(getResponse(r1) + "," + getResponse(r2) + "," + getResponse(r3));
+        return Ok(getResponse(r1) + ", " + getResponse(r2) + ", " + getResponse(r3));
     }
 }
