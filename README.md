@@ -7,6 +7,7 @@
  2) Bored Api (no api key needed): an api that returns data about a random activity to do if you are bored
  3) News Api (api key is mandatory) : api that returns global news. More in https://newsapi.org/
 
+There is an extra `AggregatorAPI\statistics` endpoint in order to get statistics about requests for each api
 # set up
 
 In order to run the project :
