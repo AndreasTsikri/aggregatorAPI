@@ -11,6 +11,9 @@ builder.Services.AddHttpClient<IBoredApiService  , BoredApiService>();
 builder.Services.AddHttpClient<IPokemonApiService, PokemonApiService>();
 builder.Services.AddHttpClient<INewsApiService   , NewsApiService>();
 
+builder.Services.AddSingleton<IStatsApiService, StatisticsApiService>();
+
+//builder.Services.AddMemoryCache();
 builder.Services.AddControllers();
 
 //Swagger for documentation/testing

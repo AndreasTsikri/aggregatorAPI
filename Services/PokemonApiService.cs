@@ -3,6 +3,8 @@ using AggregatorAPI.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using AggregatorAPI.Settings;
 using System.Text.Json;
+using System.Data;
+using System.Diagnostics;
 
 namespace AggregatorAPI.Services;
 
@@ -17,15 +19,24 @@ public class PokemonApiService : IPokemonApiService {
     readonly HttpClient _httpClient;
     readonly ILogger<PokemonApiService> _logger;
     readonly  ExternalApiConfig _apiConfig;
+    readonly IStatsApiService _statsApiService;
     readonly int MaxRetryAttempts = 3;
     readonly int DelayBetweenRetriesMilliseconds = 300;
 
     readonly string _endpoint  = "pokemon/ditto";
-    public PokemonApiService(HttpClient httpClient, ILogger<PokemonApiService> logger, IOptions<ExternalApiSettings> options, string endpoint = "pokemon/ditto"){
+    public PokemonApiService(HttpClient httpClient, ILogger<PokemonApiService> logger, IOptions<ExternalApiSettings> options,IStatsApiService statsApiService, string endpoint = "pokemon/ditto"){
         _httpClient = httpClient;
         _logger     = logger;
         _apiConfig  = options.Value.PokemonApi;
         _endpoint   = endpoint;
+        _statsApiService = statsApiService;
+    }
+
+    void UpdateStats(long? respTime = null){
+        if (respTime.HasValue)
+            _statsApiService.IncrementRespTime(this.GetType().Name, respTime.Value);
+        else
+            _statsApiService.IncrementRequestCount(this.GetType().Name);
     }
 
     public async Task<Result<string>> GetDataAsync(){
@@ -40,12 +51,16 @@ public class PokemonApiService : IPokemonApiService {
         {
             try
             {
-                attempt++;
 
+                UpdateStats();
+                attempt++;
+                
                 _logger.LogInformation("Attempt {Attempt} to call External API at {Url}", attempt, _apiConfig.BaseUrl);
 
-                //var response = await _httpClient.GetAsync("endpoint");
+                var watcher = Stopwatch.StartNew();
                 var response = await _httpClient.GetAsync(_endpoint);
+                watcher.Stop();
+                UpdateStats(watcher.ElapsedMilliseconds);
 
                 if (response.IsSuccessStatusCode)
                 {

@@ -3,6 +3,8 @@ using AggregatorAPI.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using AggregatorAPI.Settings;
 using System.Text.Json;
+using Microsoft.Extensions.Caching.Memory;
+using System.Diagnostics;
 
 namespace AggregatorAPI.Services;
 
@@ -18,17 +20,25 @@ public class BoredApiService : IBoredApiService{
     readonly HttpClient _httpClient;
     readonly ILogger<BoredApiService> _logger;
     readonly  ExternalApiConfig _apiConfig;
+    readonly IStatsApiService _statsApiService;
     readonly int MaxRetryAttempts = 3;
-    readonly int DelayBetweenRetriesMilliseconds = 300;
-
+    readonly int DelayBetweenRetriesMilliseconds = 300;    
     readonly string _endpoint  = "random";
-    public BoredApiService(HttpClient httpClient, ILogger<BoredApiService> logger, IOptions<ExternalApiSettings> options, string endpoint = "random"){
-        _httpClient = httpClient;
-        _logger     = logger;
-        _apiConfig  = options.Value.BoredApi;
-        _endpoint   = endpoint;
+
+    public BoredApiService(HttpClient httpClient, ILogger<BoredApiService> logger,  IOptions<ExternalApiSettings> options,IStatsApiService statsApiService, string endpoint = "random"){
+        _httpClient      = httpClient;
+        _logger          = logger;
+        _apiConfig       = options.Value.BoredApi;
+        _endpoint        = endpoint;
+        _statsApiService = statsApiService;
     }
 
+    void UpdateStats(long? respTime = null){
+        if (respTime.HasValue)
+            _statsApiService.IncrementRespTime(this.GetType().Name, respTime.Value);
+        else
+            _statsApiService.IncrementRequestCount(this.GetType().Name);
+    }
     public async Task<Result<string>> GetDataAsync(){
         
         _httpClient.BaseAddress = new Uri(_apiConfig.BaseUrl);
@@ -36,16 +46,22 @@ public class BoredApiService : IBoredApiService{
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiConfig.ApiKey}");
 
         int attempt = 0;
-
+        
         while (attempt < MaxRetryAttempts)
         {
             try
             {
+                UpdateStats();
                 attempt++;
 
                 _logger.LogInformation("Attempt {Attempt} to call External API at {Url}", attempt, _apiConfig.BaseUrl);
                 
+                var watcher = Stopwatch.StartNew();
+
                 var response = await _httpClient.GetAsync(_endpoint);
+                
+                watcher.Stop();
+                UpdateStats(watcher.ElapsedMilliseconds);
 
                 if (response.IsSuccessStatusCode)
                 {

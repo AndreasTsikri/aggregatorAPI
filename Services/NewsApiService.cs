@@ -3,6 +3,7 @@ using AggregatorAPI.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using AggregatorAPI.Settings;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace AggregatorAPI.Services;
 
@@ -18,15 +19,24 @@ public class NewsApiService : INewsApiService{
     readonly HttpClient _httpClient;
     readonly ILogger<NewsApiService> _logger;
     readonly  ExternalApiConfig _apiConfig;
+    readonly IStatsApiService _statsApiService;
     readonly int MaxRetryAttempts = 3;
     readonly int DelayBetweenRetriesMilliseconds = 300;
 
     string _endpoint  = "";
-    public NewsApiService(HttpClient httpClient, ILogger<NewsApiService> logger, IOptions<ExternalApiSettings> options, string endpoint = ""){
+    public NewsApiService(HttpClient httpClient, ILogger<NewsApiService> logger, IOptions<ExternalApiSettings> options, IStatsApiService statsApiService, string endpoint = ""){
         _httpClient = httpClient;
         _logger     = logger;
         _apiConfig  = options.Value.NewsApi;
         _endpoint   = endpoint;
+        _statsApiService = statsApiService;
+    }
+
+    void UpdateStats(long? respTime = null){
+        if (respTime.HasValue)
+            _statsApiService.IncrementRespTime(this.GetType().Name, respTime.Value);
+        else
+            _statsApiService.IncrementRequestCount(this.GetType().Name);
     }
 
     public async Task<Result<string>> GetDataAsync(string q, string? sortBy){
@@ -48,13 +58,16 @@ public class NewsApiService : INewsApiService{
             {
                 if (string.IsNullOrWhiteSpace(q))
                     throw new ArgumentException("q parameter must not be empty");
+
+                UpdateStats();
          
                 attempt++;
 
                 _logger.LogInformation("Attempt {Attempt} to call External API at {Url}", attempt, _apiConfig.BaseUrl);
-                
+                var watcher = Stopwatch.StartNew();
                 var response = await _httpClient.GetAsync(_endpoint);
-
+                watcher.Stop();
+                UpdateStats(watcher.ElapsedMilliseconds);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
