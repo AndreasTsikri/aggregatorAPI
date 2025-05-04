@@ -100,7 +100,7 @@ public class AggregatorApiController : ControllerBase
     {
 
         try{
-            //string[] groups = new string[]{"undefined","fast","medium","slow"};
+            
             string calculatePerformanceGroup(long avg) => avg <=0 ?"undefined" : avg < 100 ? "fast" : avg < 200 ? "medium" : "slow";
             
             string api1name = _boredApiService.GetType().Name; 
@@ -108,7 +108,6 @@ public class AggregatorApiController : ControllerBase
             string api3name = _newsApiService.GetType().Name; 
             var apiN = new string[]{api1name,api2name, api3name};
 
-            //var rd = new Dictionary<string, (int, long)>();
             var rd = new Dictionary<string, string>();
             foreach(var n in apiN){
                 var count = _statsApiService.GetReqCount(n);
