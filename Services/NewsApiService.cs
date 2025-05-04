@@ -13,7 +13,7 @@ public interface INewsApiService : IExternalApiServiceWithParams<string> {
 }
 
 /// <summary>
-/// This is the third External Api(News Api) service
+/// 
 /// </summary>
 public class NewsApiService : INewsApiService{
     readonly HttpClient _httpClient;

@@ -13,7 +13,7 @@ public interface IPokemonApiService : IExternalApiService<string>{
 }
 
 /// <summary>
-/// This is the first External Api(Pokemon Api) that is called as a service
+/// 
 /// </summary>
 public class PokemonApiService : IPokemonApiService {
     readonly HttpClient _httpClient;
