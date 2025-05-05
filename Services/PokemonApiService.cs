@@ -18,7 +18,7 @@ public interface IPokemonApiService : IExternalApiService<string>{
 public class PokemonApiService : IPokemonApiService {
     readonly HttpClient _httpClient;
     readonly ILogger<PokemonApiService> _logger;
-    readonly  ExternalApiConfig _apiConfig;
+    readonly ExternalApiConfig _apiConfig;
     readonly IStatsApiService _statsApiService;
     readonly int MaxRetryAttempts = 3;
     readonly int DelayBetweenRetriesMilliseconds = 300;

@@ -60,6 +60,8 @@ public class AggregatorApiController : ControllerBase
             return r.IsSuccess ? r?.Data ?? "No data" : r?.ErrorMessage ?? "No error message";
         }
 
+        
+
         var api1 = _boredApiService.GetDataAsync();
         var api2 = _pokemonApiService.GetDataAsync();
         var api3 = _newsApiService.GetDataAsync(q, sortBy);

@@ -39,8 +39,17 @@ public class NewsApiService : INewsApiService{
             _statsApiService.IncrementRequestCount(this.GetType().Name);
     }
 
+    void filterInput(string s){
+        if(string.IsNullOrWhiteSpace(s))
+            return;
+        if(s.Length < 10)
+            return;
+        throw new Exception($"Input({s}) must have lower than 20 characters");
+    }
+
     public async Task<Result<string>> GetDataAsync(string q, string? sortBy){
-        
+        filterInput(q);
+        filterInput(sortBy);
         _httpClient.BaseAddress = new Uri(_apiConfig.BaseUrl);
         //_httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("X-Api-Key", $"{_apiConfig.ApiKey}");
